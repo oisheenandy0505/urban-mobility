@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Urban Mobility Resilience Simulator</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 2rem;
+      background: #f5f5f5;
+    }
+    .card {
+      background: #fff;
+      padding: 1.5rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      max-width: 720px;
+      margin-bottom: 1.5rem;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.25rem;
+      font-weight: 600;
+    }
+    input, select {
+      width: 100%;
+      padding: 0.5rem;
+      margin-bottom: 0.75rem;
+      border-radius: 0.5rem;
+      border: 1px solid #ccc;
+      font-size: 0.95rem;
+    }
+    button {
+      padding: 0.6rem 1.2rem;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      background: #111827;
+      color: #fff;
+    }
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .metrics {
+      margin-top: 0.75rem;
+    }
+    .metrics div {
+      margin-bottom: 0.25rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Urban Mobility Resilience Simulator</h1>
+    <p>Pick a city, shock type, and intensity, then hit “Run Simulation”.</p>
+
+    <label for="city">City (e.g. Pittsburgh, Pennsylvania, USA)</label>
+    <input id="city" type="text" value="Pittsburgh, Pennsylvania, USA" />
+
+    <label for="scenario">Shock scenario</label>
+    <select id="scenario"></select>
+
+    <label for="severity">Severity (fraction of edges removed)</label>
+    <input id="severity" type="number" step="0.01" min="0.01" max="0.5" value="0.05" />
+
+    <label for="pairs">Number of OD pairs to sample</label>
+    <input id="pairs" type="number" min="10" max="200" value="40" />
+
+    <label>
+      <input type="checkbox" id="use_usgs" />
+      Use USGS flood data for Highway Flood (if available)
+    </label>
+
+    <button id="runBtn">Run Simulation</button>
+    <span id="status" style="margin-left: 0.75rem;"></span>
+
+    <div class="metrics" id="metrics"></div>
+  </div>
+
+  <script>
+    const API_BASE = "http://127.0.0.1:8000";
+
+    async function loadScenarios() {
+      const res = await fetch(API_BASE + "/scenarios");
+      const data = await res.json();
+      const sel = document.getElementById("scenario");
+      data.scenarios.forEach((sc) => {
+        const opt = document.createElement("option");
+        opt.value = sc;
+        opt.textContent = sc;
+        sel.appendChild(opt);
+      });
+    }
+
+    async function runSimulation() {
+      const city = document.getElementById("city").value.trim();
+      const scenario = document.getElementById("scenario").value;
+      const severity = parseFloat(document.getElementById("severity").value);
+      const n_pairs = parseInt(document.getElementById("pairs").value, 10) || 40;
+      const use_usgs = document.getElementById("use_usgs").checked;
+
+      const btn = document.getElementById("runBtn");
+      const status = document.getElementById("status");
+      const metricsDiv = document.getElementById("metrics");
+
+      if (!city) {
+        alert("Please enter a city.");
+        return;
+      }
+
+      btn.disabled = true;
+      status.textContent = "Running...";
+      metricsDiv.innerHTML = "";
+
+      try {
+        const res = await fetch(API_BASE + "/simulate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            city,
+            scenario,
+            severity,
+            n_pairs,
+            use_usgs_flood: use_usgs
+          }),
+        });
+
+        if (!res.ok) {
+          const text = await res.text();
+          throw new Error(text || "Request failed");
+        }
+
+        const data = await res.json();
+
+        metricsDiv.innerHTML = `
+          <h2>Results</h2>
+          <div>City: <strong>${data.city}</strong></div>
+          <div>Scenario: <strong>${data.scenario}</strong></div>
+          <div>Severity: <strong>${data.severity}</strong></div>
+          <div>Average travel-time ratio: <strong>${data.avg_ratio.toFixed(2)}</strong></div>
+          <div>Median travel-time ratio: <strong>${data.median_ratio.toFixed(2)}</strong></div>
+          <div>Disconnected OD pairs: <strong>${data.pct_disconnected.toFixed(1)}%</strong></div>
+          <div>Edges removed: <strong>${data.n_removed_edges}</strong></div>
+          <div>OD pairs sampled: <strong>${data.n_pairs}</strong></div>
+        `;
+        status.textContent = "Done.";
+      } catch (err) {
+        console.error(err);
+        status.textContent = "Error. See console.";
+        alert("Simulation failed: " + err.message);
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    document.getElementById("runBtn").addEventListener("click", runSimulation);
+    loadScenarios().catch(console.error);
+  </script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+fastapi
+uvicorn[standard]
+osmnx
+networkx
+numpy
+pandas
+shapely
+requests
