@@ -75,7 +75,7 @@ function severeTripsBucket(avgRatio, pctDisconnected) {
 
 function commuterSentence(avgRatio, pctDisconnected) {
   if (avgRatio == null) return null;
-  const base = 20; // 20-minute cross-town trip
+  const base = 20;
   const central = base * avgRatio;
   const low = Math.round(0.9 * central);
   const high = Math.round(1.1 * central);

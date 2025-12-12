@@ -1,5 +1,3 @@
-# backend/urban_resilience/edge_selection.py
-
 from __future__ import annotations
 from typing import Iterable, List, Tuple, Optional, Dict
 
@@ -17,16 +15,8 @@ _EDGE_BETWEENNESS_CACHE: Dict[int, List[Tuple[Tuple[int, int], float]]] = {}
 
 
 def graph_to_edges_gdf(G: nx.MultiDiGraph):
-    """
-    Convert graph edges to a GeoDataFrame with (u, v, key, geometry, tags).
-
-    Compatible with both older and newer osmnx versions.
-    Ensures 'u', 'v', 'key' are actual columns (not just index levels).
-    """
-    # Newer osmnx API
     if hasattr(ox, "graph_to_gdfs"):
         gdf_nodes, gdf_edges = ox.graph_to_gdfs(G, nodes=True, edges=True)
-    # Older osmnx API
     elif hasattr(ox, "utils_graph") and hasattr(ox.utils_graph, "graph_to_gdfs"):
         gdf_nodes, gdf_edges = ox.utils_graph.graph_to_gdfs(
             G, nodes=True, edges=True
@@ -37,12 +27,10 @@ def graph_to_edges_gdf(G: nx.MultiDiGraph):
             "Try upgrading: pip install --upgrade osmnx"
         )
 
-    # In many osmnx versions, u/v/key are index levels; make them columns.
     for col in ("u", "v", "key"):
         if col not in gdf_edges.columns and col in gdf_edges.index.names:
             gdf_edges = gdf_edges.reset_index(level=col)
 
-    # If still not present, reset full index
     if not {"u", "v", "key"}.issubset(gdf_edges.columns):
         gdf_edges = gdf_edges.reset_index()
 

@@ -95,7 +95,6 @@ const TimeOfDayImpact = ({ simResult }) => {
 
   return (
     <div style={{ padding: "1.75rem 1.75rem 1.5rem 1.75rem" }}>
-      {/* Title */}
       <h2 style={{ margin: 0, marginBottom: "0.4rem" }}>
         How this would feel at different times of day
       </h2>

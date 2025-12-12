@@ -44,12 +44,6 @@ function FitBoundsToGeoJSON({ data }) {
   return null;
 }
 
-/**
- * Main network map.
- * - edges: full network GeoJSON
- * - removedEdges: subset of disrupted edges (overlay in red)
- * - mapVersion: integer used as `key` to force remount on new runs
- */
 function NetworkMap({ edges, removedEdges, mapVersion }) {
   const hasData = edges && edges.features && edges.features.length > 0;
 
@@ -113,10 +107,8 @@ function NetworkMap({ edges, removedEdges, mapVersion }) {
 
         {hasData && (
           <>
-            {/* Base network */}
             <GeoJSON data={edges} style={edgeStyleFn} />
 
-            {/* Disrupted edges overlay, if any */}
             {removedEdges &&
               removedEdges.features &&
               removedEdges.features.length > 0 && (

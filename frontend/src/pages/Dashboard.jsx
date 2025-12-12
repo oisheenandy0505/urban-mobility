@@ -21,7 +21,7 @@ function mapIntensityToSeverity(intensityPercent) {
   const maxSeverity = 0.5;
 
   const clamped = Math.min(maxSlider, Math.max(minSlider, intensityPercent));
-  const t = (clamped - minSlider) / (maxSlider - minSlider); // 0 → 1
+  const t = (clamped - minSlider) / (maxSlider - minSlider);
   const severity = minSeverity + t * (maxSeverity - minSeverity);
   return Number(severity.toFixed(3));
 }
@@ -183,7 +183,6 @@ function Dashboard() {
           alignItems: "flex-start",
         }}
       >
-        {/* LEFT: controls */}
         <section
           style={{
             background: "#ffffff",
@@ -206,7 +205,6 @@ function Dashboard() {
               : "Choose a city, then set up a disruption to simulate."}
           </p>
 
-          {/* Intensity slider */}
           <label
             style={{
               display: "block",
@@ -240,7 +238,6 @@ function Dashboard() {
             <span>Catastrophic</span>
           </div>
 
-          {/* Scenario buttons */}
           <label
             style={{
               display: "block",
@@ -275,7 +272,6 @@ function Dashboard() {
             ))}
           </div>
 
-          {/* OD pairs */}
           <label
             style={{
               display: "block",
@@ -302,7 +298,6 @@ function Dashboard() {
             }}
           />
 
-          {/* Run button */}
           <button
             type="button"
             onClick={handleRun}
@@ -332,7 +327,6 @@ function Dashboard() {
           </div>
         </section>
 
-        {/* RIGHT: main content */}
         <section
           style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
         >
@@ -471,7 +465,6 @@ function Dashboard() {
               <TimeOfDayImpact simResult={simResult} />
             </div>
           )}
-          {/* ✅ NEW: ML tab */}
           {activeTab === "ml" && (
             <div
               style={{
@@ -533,31 +526,6 @@ function MetricPill({ label, primary, secondary }) {
       {secondary && (
         <div style={{ fontSize: "0.75rem", color: "#9ca3af" }}>{secondary}</div>
       )}
-    </div>
-  );
-}
-
-function SummaryCard({ title, value }) {
-  return (
-    <div
-      style={{
-        padding: "0.9rem 1rem",
-        borderRadius: "0.9rem",
-        background: "linear-gradient(135deg,#eef2ff,#f5f3ff)",
-        border: "1px solid #e0e7ff",
-      }}
-    >
-      <div
-        style={{
-          fontSize: "0.8rem",
-          textTransform: "uppercase",
-          color: "#6b7280",
-          marginBottom: 4,
-        }}
-      >
-        {title}
-      </div>
-      <div style={{ fontWeight: 700, fontSize: "1.1rem" }}>{value}</div>
     </div>
   );
 }

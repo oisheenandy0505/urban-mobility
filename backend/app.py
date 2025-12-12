@@ -37,14 +37,11 @@ app.add_middleware(
 app.include_router(ml_routes.router)
 
 
-# ---------- Pydantic models ----------
-
-
 class SimRequest(BaseModel):
     city: str
     scenario: str
-    severity: float          # 0–1 fraction of edges to remove (after mapping from slider)
-    n_pairs: int = 20        # number of OD pairs to probe
+    severity: float          # fraction of edges to remove (0–1)
+    n_pairs: int = 20        # how many origin–destination pairs to sample
 
 
 class SimResponse(BaseModel):
@@ -58,9 +55,6 @@ class SimResponse(BaseModel):
     n_pairs: int
     edges_geojson: Dict[str, Any]
     removed_edges_geojson: Dict[str, Any]
-
-
-# ---------- Helper for GeoJSON building ----------
 
 
 def build_edges_geojson(

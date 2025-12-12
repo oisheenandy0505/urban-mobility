@@ -24,9 +24,6 @@ class SimulationResult:
 
 
 def _largest_component(G: nx.Graph) -> nx.Graph:
-    """
-    Keep the largest connected component (weak for directed graphs).
-    """
     if isinstance(G, (nx.DiGraph, nx.MultiDiGraph)):
         comp = max(nx.weakly_connected_components(G), key=len)
         return G.subgraph(comp).copy()
@@ -39,9 +36,6 @@ def sample_od_pairs(
     n_pairs: int,
     seed: Optional[int] = None,
 ):
-    """
-    Sample origin–destination node pairs that are connected in the largest component.
-    """
     rng = np.random.default_rng(seed)
     H = _largest_component(G)
     nodes = list(H.nodes())
@@ -61,9 +55,6 @@ def sample_od_pairs(
 
 
 def _weight_attr(G: nx.MultiDiGraph) -> str:
-    """
-    Decide whether to use 'travel_time' or 'length' as edge weight.
-    """
     for _, _, data in G.edges(data=True):
         if "travel_time" in data:
             return "travel_time"
@@ -74,11 +65,6 @@ def _weight_attr(G: nx.MultiDiGraph) -> str:
 
 
 def _geo_heuristic(G: nx.MultiDiGraph):
-    """
-    Build an admissible heuristic function for A* based on straight-line
-    distance between node coordinates. Keeps paths optimal but can prune
-    some search.
-    """
 
     def h(u: int, v: int) -> float:
         ux = G.nodes[u].get("x")
@@ -89,7 +75,6 @@ def _geo_heuristic(G: nx.MultiDiGraph):
             return 0.0
         dx = ux - vx
         dy = uy - vy
-        # Euclidean distance in degrees; we're only using it as a lower bound
         return math.hypot(dx, dy)
 
     return h
@@ -102,11 +87,6 @@ def simulate_single_shock(
     penalty_ratio: float = 5.0,
     seed: Optional[int] = None,
 ):
-    """
-    Remove specified edges, then compare A* travel times before vs after on OD pairs.
-
-    Uses an admissible geometric heuristic so A* still returns exact shortest paths.
-    """
     G_before = G
     G_after = G.copy()
 
@@ -138,7 +118,6 @@ def simulate_single_shock(
                 G_before, u, v, heuristic=heuristic, weight=weight
             )
         except nx.NetworkXNoPath:
-            # Should be rare, since we sampled from the largest component
             continue
 
         try:

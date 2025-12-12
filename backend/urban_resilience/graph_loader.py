@@ -1,5 +1,3 @@
-# backend/urban_resilience/graph_loader.py
-
 from __future__ import annotations
 import os
 import osmnx as ox
@@ -17,11 +15,9 @@ def load_city_graph(city: str, cache_dir: str = "graphs") -> nx.MultiDiGraph:
     safe_name = city.replace(",", "").replace(" ", "_")
     cache_path = os.path.join(cache_dir, f"{safe_name}.graphml")
 
-    # --- NEW: in-memory cache first ---
     if safe_name in _GRAPH_CACHE:
         return _GRAPH_CACHE[safe_name]
 
-    # Otherwise load from disk or download
     if os.path.exists(cache_path):
         G = ox.load_graphml(cache_path)
     else:

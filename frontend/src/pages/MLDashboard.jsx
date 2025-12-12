@@ -51,7 +51,6 @@ export default function MLDashboard() {
     setLoading(false);
   };
 
-  // ------------------ STYLES ------------------
   const card = {
     padding: "1.4rem",
     background: "#ffffff",
@@ -102,8 +101,6 @@ export default function MLDashboard() {
     cursor: "not-allowed",
   };
 
-  // ------------------------------------------------------
-
   return (
     <div style={{ padding: "2rem", maxWidth: "700px", margin: "0 auto" }}>
       <h2 style={{ marginBottom: 10 }}>Urban Network Resilience Simulator</h2>
@@ -111,7 +108,6 @@ export default function MLDashboard() {
         Analyze how real US city road networks respond to disruptions.
       </p>
 
-      {/* --- Input Card --- */}
       <div style={card}>
         <div style={{ marginBottom: "1rem" }}>
           <label style={labelStyle}>City</label>
@@ -158,7 +154,6 @@ export default function MLDashboard() {
         </button>
       </div>
 
-      {/* Result Card */}
       {result !== null && (
         <div style={{ ...card, background: "#eefbf0" }}>
           <h3>Predicted Resilience</h3>
@@ -168,7 +163,6 @@ export default function MLDashboard() {
         </div>
       )}
 
-      {/* Explanation Card */}
       {scenarioExp && (
         <div style={{ ...card, background: "#f4f4ff" }}>
           <h3>Why this score?</h3>

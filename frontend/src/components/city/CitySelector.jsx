@@ -6,14 +6,12 @@ function CitySelector({ currentCity, onSelect }) {
   const [auto, setAuto] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // 🔍 Local matches from POPULAR_CITIES
   const matches = useMemo(() => {
     if (!query.trim()) return [];
     const q = query.toLowerCase();
     return POPULAR_CITIES.filter((c) => c.label.toLowerCase().includes(q));
   }, [query]);
 
-  // 🌐 Real autocomplete (Nominatim)
   useEffect(() => {
     if (!query.trim()) {
       setAuto([]);
@@ -41,7 +39,6 @@ function CitySelector({ currentCity, onSelect }) {
 
         setAuto(cleaned);
       } catch (err) {
-        // ignore abort or network errors for now
       } finally {
         setLoading(false);
       }
@@ -57,7 +54,6 @@ function CitySelector({ currentCity, onSelect }) {
   const results =
     matches.length > 0 || auto.length > 0 ? [...matches, ...auto] : [];
 
-  // Handle pressing Enter in the search input
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     if (results[0]) {
@@ -76,7 +72,6 @@ function CitySelector({ currentCity, onSelect }) {
         border: "1px solid #e5e7eb",
       }}
     >
-      {/* Header */}
       <div
         style={{
           display: "flex",
@@ -121,7 +116,6 @@ function CitySelector({ currentCity, onSelect }) {
         </div>
       </div>
 
-      {/* Search bar */}
       <form
         onSubmit={handleSearchSubmit}
         style={{
@@ -183,7 +177,6 @@ function CitySelector({ currentCity, onSelect }) {
         </button>
       </form>
 
-      {/* Search results */}
       {query.trim() && (
         <div style={{ marginBottom: "0.9rem", marginTop: "0.9rem" }}>
           <div
@@ -239,7 +232,6 @@ function CitySelector({ currentCity, onSelect }) {
         </div>
       )}
 
-      {/* Popular cities */}
       {!query.trim() && (
         <>
           <div
@@ -289,7 +281,6 @@ function CitySelector({ currentCity, onSelect }) {
         </>
       )}
 
-      {/* Current banner */}
       {currentCity && (
         <div
           style={{
