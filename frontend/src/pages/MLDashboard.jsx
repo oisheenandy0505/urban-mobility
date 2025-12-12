@@ -51,112 +51,138 @@ export default function MLDashboard() {
     setLoading(false);
   };
 
+  // ------------------ STYLES ------------------
+  const card = {
+    padding: "1.4rem",
+    background: "#ffffff",
+    borderRadius: 12,
+    boxShadow: "0 4px 16px rgba(0,0,0,0.06)",
+    marginTop: "1.4rem",
+  };
+
+  const labelStyle = {
+    fontWeight: 600,
+    marginBottom: 6,
+    display: "block",
+  };
+
+  const input = {
+    width: "260px",
+    padding: "10px",
+    fontSize: "1rem",
+    borderRadius: 8,
+    outline: "none",
+    border: "1px solid #d1d1d1",
+  };
+
+  const selectStyle = {
+    padding: "10px",
+    fontSize: "1rem",
+    borderRadius: 8,
+    outline: "none",
+    border: "1px solid #d1d1d1",
+  };
+
+  const button = {
+    marginTop: "1rem",
+    padding: "12px 22px",
+    background: "linear-gradient(135deg, #4c8bfd, #376bdb)",
+    color: "white",
+    borderRadius: 8,
+    border: "none",
+    fontSize: "1rem",
+    fontWeight: 600,
+    cursor: "pointer",
+    boxShadow: "0 3px 10px rgba(76, 139, 253, 0.3)",
+  };
+
+  const buttonDisabled = {
+    ...button,
+    background: "#aac7ff",
+    cursor: "not-allowed",
+  };
+
+  // ------------------------------------------------------
+
   return (
-    <div style={{ padding: "2rem", maxWidth: "900px", margin: "0 auto" }}>
-      <h2>ML Resilience Prediction</h2>
+    <div style={{ padding: "2rem", maxWidth: "700px", margin: "0 auto" }}>
+      <h2 style={{ marginBottom: 10 }}>Urban Network Resilience Simulator</h2>
+      <p style={{ color: "#555", marginBottom: 30 }}>
+        Analyze how real US city road networks respond to disruptions.
+      </p>
 
-      {/* City input */}
-      <div style={{ marginTop: "1.2rem" }}>
-        <label>
-          <strong>City:</strong>
-        </label>
-        <input
-          type="text"
-          value={city}
-          placeholder="Boston, MA"
-          onChange={(e) => setCity(e.target.value)}
-          style={{ marginLeft: 10, width: 250, padding: 6 }}
-        />
-      </div>
+      {/* --- Input Card --- */}
+      <div style={card}>
+        <div style={{ marginBottom: "1rem" }}>
+          <label style={labelStyle}>City</label>
+          <input
+            type="text"
+            value={city}
+            placeholder="Boston, MA"
+            onChange={(e) => setCity(e.target.value)}
+            style={input}
+          />
+        </div>
 
-      {/* Failure Type */}
-      <div style={{ marginTop: "1rem" }}>
-        <label>
-          <strong>Failure Type:</strong>
-        </label>
-        <select
-          value={failureType}
-          onChange={(e) => setFailureType(e.target.value)}
-          style={{ marginLeft: 10, padding: 6 }}
+        <div style={{ marginBottom: "1rem" }}>
+          <label style={labelStyle}>Failure Type</label>
+          <select
+            value={failureType}
+            onChange={(e) => setFailureType(e.target.value)}
+            style={selectStyle}
+          >
+            {FAILURE_OPTIONS.map((t) => (
+              <option key={t}>{t}</option>
+            ))}
+          </select>
+        </div>
+
+        <div style={{ marginBottom: "1rem" }}>
+          <label style={labelStyle}>Intensity (0–100)</label>
+          <input
+            type="number"
+            min={0}
+            max={100}
+            value={intensity}
+            onChange={(e) => setIntensity(Number(e.target.value))}
+            style={{ ...input, width: "100px" }}
+          />
+        </div>
+
+        <button
+          onClick={predict}
+          disabled={loading}
+          style={loading ? buttonDisabled : button}
         >
-          {FAILURE_OPTIONS.map((t) => (
-            <option key={t}>{t}</option>
-          ))}
-        </select>
+          {loading ? "Predicting…" : "Run Prediction"}
+        </button>
       </div>
 
-      {/* Intensity */}
-      <div style={{ marginTop: "1rem" }}>
-        <label>
-          <strong>Intensity (0–100):</strong>
-        </label>
-        <input
-          type="number"
-          min={0}
-          max={100}
-          value={intensity}
-          onChange={(e) => setIntensity(Number(e.target.value))}
-          style={{ marginLeft: 10, width: 80, padding: 6 }}
-        />
-      </div>
-
-      {/* Button */}
-      <button
-        onClick={predict}
-        disabled={loading}
-        style={{
-          marginTop: 20,
-          padding: "10px 20px",
-          background: "#4c8bfd",
-          color: "white",
-          borderRadius: 6,
-          border: "none",
-        }}
-      >
-        {loading ? "Predicting…" : "Predict"}
-      </button>
-
-      {/* Prediction Result */}
+      {/* Result Card */}
       {result !== null && (
-        <div
-          style={{
-            marginTop: 25,
-            padding: 15,
-            background: "#e7ffe7",
-            borderRadius: 6,
-          }}
-        >
+        <div style={{ ...card, background: "#eefbf0" }}>
           <h3>Predicted Resilience</h3>
-          <p style={{ fontSize: "1.3rem" }}>
-            <strong>{result.toFixed(4)}</strong>
+          <p style={{ fontSize: "1.5rem", fontWeight: 600, marginTop: 10 }}>
+            {result.toFixed(4)}
           </p>
         </div>
       )}
 
-      {/* Explanation */}
+      {/* Explanation Card */}
       {scenarioExp && (
-        <div
-          style={{
-            marginTop: 25,
-            padding: 15,
-            background: "#f4f4ff",
-            borderRadius: 6,
-          }}
-        >
+        <div style={{ ...card, background: "#f4f4ff" }}>
           <h3>Why this score?</h3>
 
-          {/* Scenario Explanation */}
-          <p style={{ marginTop: 10 }}>
+          <p style={{ marginTop: 12 }}>
             Under the <strong>{scenarioExp.name}</strong> scenario, resilience
             changed by <strong>{scenarioExp.effect.toFixed(4)}</strong> relative
-            to a typical city in the dataset.
+            to a typical city.
           </p>
 
-          {/* Structural Explanations */}
-          <h4 style={{ marginTop: 15 }}>Key Structural Factors</h4>
-          <ul>
+          <h4 style={{ marginTop: 16 }}>Key Structural Factors</h4>
+          <ul style={{ marginTop: 6 }}>
             {structuralExp.map((item, i) => (
-              <li key={i}>
+              <li key={i} style={{ marginBottom: 4 }}>
                 <strong>{item.feature.replace("feat_", "")}</strong>:{" "}
                 {item.effect > 0 ? "+" : ""}
                 {item.effect.toFixed(4)}

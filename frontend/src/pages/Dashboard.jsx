@@ -471,66 +471,6 @@ function Dashboard() {
               <TimeOfDayImpact simResult={simResult} />
             </div>
           )}
-
-          {activeTab === "resilience" && (
-            <div
-              style={{
-                background: "#ffffff",
-                padding: "1.25rem",
-                borderRadius: "1rem",
-                border: "1px solid #e5e7eb",
-                display: "flex",
-                flexDirection: "column",
-                gap: "1rem",
-              }}
-            >
-              <h3 style={{ marginTop: 0 }}>Resilience Analysis</h3>
-              <p
-                style={{
-                  marginTop: 0,
-                  fontSize: "0.85rem",
-                  color: "#6b7280",
-                }}
-              >
-                This view summarizes how structural network features relate to
-                resilience once you aggregate simulations across cities and
-                scenarios.
-              </p>
-
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
-                  gap: "0.75rem",
-                }}
-              >
-                <SummaryCard title="Total Simulations" value={history.length} />
-                <SummaryCard
-                  title="Avg Resilience (this run)"
-                  value={
-                    resilienceScore != null
-                      ? `${resilienceScore.toFixed(1)}%`
-                      : "—"
-                  }
-                />
-                <SummaryCard
-                  title="Cities Tested"
-                  value={new Set(history.map((h) => h.cityLabel)).size}
-                />
-                <SummaryCard
-                  title="Most Recent City"
-                  value={
-                    history.length ? history[history.length - 1].cityLabel : "—"
-                  }
-                />
-              </div>
-
-              <MultiCitySummary history={history} />
-              <WhatIfPanel simResult={simResult} scenario={scenario} />
-              <MetricsHelp />
-            </div>
-          )}
-
           {/* ✅ NEW: ML tab */}
           {activeTab === "ml" && (
             <div
@@ -544,9 +484,6 @@ function Dashboard() {
                 gap: "1rem",
               }}
             >
-              <h3 style={{ marginTop: 0, marginBottom: "0.5rem" }}>
-                ML Resilience Lab
-              </h3>
               <p
                 style={{
                   marginTop: 0,

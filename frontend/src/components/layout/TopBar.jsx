@@ -20,8 +20,7 @@ function TopBar() {
             width: 40,
             height: 40,
             borderRadius: 18,
-            background:
-              "linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%)",
+            background: "linear-gradient(135deg, #f1e1c2 0%, #fcbc98 100%)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",

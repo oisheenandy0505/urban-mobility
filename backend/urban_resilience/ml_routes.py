@@ -172,5 +172,5 @@ async def predict_city(req: PredictCityRequest):
         }
 
     except Exception as e:
-        print("❌ Prediction error:", e)
+        print(" Prediction error:", e)
         raise HTTPException(status_code=500, detail=str(e))

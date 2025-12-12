@@ -54,7 +54,6 @@ function CitySelector({ currentCity, onSelect }) {
     };
   }, [query]);
 
-  // 👉 Unified result list (popular matches first, then autocomplete)
   const results =
     matches.length > 0 || auto.length > 0 ? [...matches, ...auto] : [];
 
@@ -91,8 +90,7 @@ function CitySelector({ currentCity, onSelect }) {
             width: 32,
             height: 32,
             borderRadius: "999px",
-            background:
-              "radial-gradient(circle at 30% 20%, #f97316, #7c3aed)",
+            background: "radial-gradient(circle at 30% 20%, #f1e1c2, #fcbc98)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -147,9 +145,7 @@ function CitySelector({ currentCity, onSelect }) {
               fontSize: "1rem",
               color: "#9ca3af",
             }}
-          >
-            🔍
-          </span>
+          ></span>
           <input
             type="text"
             value={query}
