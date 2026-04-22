@@ -3,7 +3,7 @@
 
 ## Overview
 Graph-based analysis of road network resilience across 6 U.S. 
-cities — quantifying connectivity loss and travel-time inflation 
+cities quantifying connectivity loss and travel-time inflation 
 under infrastructure failure conditions using network science 
 and machine learning.
 
@@ -13,7 +13,7 @@ Pittsburgh, San Francisco
 ---
 
 ## Research Question
-If part of a city's road network fails — which cities continue 
+If part of a city's road network fails which cities continue 
 to function, and which collapse into gridlock?
 
 ---
@@ -68,13 +68,13 @@ paths under disruption.
 
 **4. Vulnerability clusters spatially**
 Vulnerable hubs concentrate along downtown cores, river 
-crossings, and major arterial corridors — not uniformly 
+crossings, and major arterial corridors not uniformly 
 distributed. A small number of critical nodes drive 
 disproportionate system-wide collapse.
 
 **5. Connectivity collapse is nonlinear**
 At 20%+ severity, several cities experience abrupt 
-reachability loss — suggesting a fragmentation threshold.
+reachability loss suggesting a fragmentation threshold.
 
 ---
 
